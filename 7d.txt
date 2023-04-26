@@ -1,0 +1,57 @@
+A)Performing Spatial Queries
+Here we are working on 2 layers, line layer for river and point layer representing cities. The task is to
+ execute spatial query to find all cities which are within 10 km s of river.
+Required dataset:
+ne_10m_rivers_lake_centerlines 10m_populated_places_simple
+1.Add vector layer and open “ne_10m_rivers_lake_centerlines.shp” and “10m_populated_places_simple.shp” one by one.
+2.Both the layers are loaded in QGIS.
+3.We need to create buffers around point and line layers. But the layers which we have loaded are in Geographic
+ CRS with the unit of degrees, this is not suitable here, because we want our analysis to use meters or kms.
+ To do this, we need to re project our layers to the Projected CRS. For that right click on “10m_populated_places_simple”
+ and select Save as…
+4.On Save vector layer dialog box click on Browse button next to save as and select location for the new layer and give
+ name as “populated_places_reprojected”, then click on Change button next to CRS, now we need to select proper CRS for 
+generating buffers, Azimuthal Equidistance would be the best for this.
+5.Back on Save vector layer dialog box, check the box next to Add saved file to map and click on Ok.
+6.Repeat the same procedure for “ne_10m_rivers_lake_centerlines” layer and save new layer as “rivers_lake_reprojected”.
+7.Just uncheck the boxes against original layers from layer pane. But still the CRS is not changed because of default setting,
+ so click on Project  Project Properties…
+8.On Project Properties window open CRS tab and uncheck “Enable on the fly CRS transformation” then click on Ok.
+9.In QGIS main window right click on any reprojected layer in layer pane and select Zoom to Layer Extent.
+10.Now we are ready to create buffers, click on Vector  Geoprocessing Tools Buffer.
+11.In the buffer tool, select populated_places_reprojected layer as input. Enter buffer distance as 10000 (as we want a 
+buffer of 10kms and since CRS units are in meters we need to enter 10000). Enter output file name as populated_places_buffer.
+ Click on Ok.
+12.When the processing is done, click on Yes to add newly created layer to TOC.
+13.Repeat the same procedure for rivers_lake_reprojected layer and give name of output layer as rivers_lake_buffer.
+14.Now, rivers_lake_buffer contains features that are rivers as well as lake, but we want only rivers for our analysis, 
+so we will run query to select only river features. Right click on rivers_lake_buffer layer and select Open Attributes Table.
+15.We can see the featurecla attribute which contains the information we can use to select the river feature, click on select 
+features using an expression button.
+16.Enter the expression “featurecla” = „River‟, click on Select button and then click on Close to return back to the main QGIS window.
+17.We are ready to perform the spatial query. We need to enable the Spatial Query plugin to use this functionality. Once Spatial 
+Query plugin is enabled, go to Vector  Spatial Query  Spatial Query.
+18.For our query, we want to select features from the buffered places which intersect with the buffered river lines. Check the checkbox
+ next to selected geometries. This is to make sure that the query uses only river features that we have selected previously. Click Apply.
+19.Once the query is completed, we will see a new section named Selected features. Click on the Create layer with selected button.
+ A new layer will be added to the Layers pane.
+Click Close.
+20.Zoom in to any area and compare the results. We will notice that the new layer contains only the features that intersect with 
+river buffers. We can verify this just uncheck populated_places_buffer layer so that the canvas will display cities intersected with river.
+Here, we are done with “Performing Spatial Queries”, next steps are for verification only.
+21.We should always verify our results to ensure the analysis is accurate enough. One way to verify the results is to export this layer 
+as a KML file and load it on Google Earth. We can check if the areas we found really are within 10kms of a river. Right-click the layer and Save As....
+22.In the Save vector layer as window, select format as KML, choose WGS 84 as the CRS. This is because KML format needs the coordinates 
+to be in Geometric CRS. Name KML layer as cities_near_river.kml.
+23.Open Google Earth (https://www.google.com/intl/en_in/earth/) then click on “Launch Earth”. Click on Projects option and then click on Open.
+ Select Import KML file from computer and open .kml file which we have created to verify that the cities represented by these buffers are actual close to rivers.
+ 
+
+
+ 
+
+
+
+
+ 
+
